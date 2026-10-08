@@ -1,0 +1,13 @@
+.git
+.gitignore
+
+README.md
+CONTRIBUTING.md
+SECURITY.md
+LICENSE
+
+__pycache__
+*.pyc
+*.pyo
+
+.DS_Store

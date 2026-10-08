@@ -1,18 +1,20 @@
-FROM python:3.12@sha256:63828510c8b5ccce3bf0d6fabd6f3d17d4effa1ffe690f80a67c8e2d394e03ee
-
-RUN apt-get update && apt-get install -y \
-    build-essential \
-    gcc \
-    curl \
-    vim
+FROM python:3.12-slim@sha256:05cda9777409a9c3ffddd94a4c476b79f0769a0b4857f0c7ed9226b6800b0d6f
 
 WORKDIR /app
 
-COPY . .
+# Copy dependencies first to take adv of Docker layer caching
+COPY app/requirements.txt .
 
-RUN pip install -r app/requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy application code separately for dependency installation
+COPY app ./app
+
+# Run the application as a non-root user
+RUN useradd --create-home appuser
+
+USER appuser
 
 EXPOSE 8080
 
-# The whole context was copied to /app, so the app package lives in /app/app.
 CMD ["gunicorn", "--chdir", "app", "--bind", "0.0.0.0:8080", "--workers", "2", "app:app"]

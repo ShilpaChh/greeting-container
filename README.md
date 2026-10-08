@@ -32,3 +32,13 @@ The application:
 -   Listens on the port given by the `PORT` environment variable (default `8080`).
 -   Reads a `GREETING` environment variable used in its response.
 -   Exposes `GET /`, `GET /healthz`, and `GET /info`.
+
+## Improvements Made
+
+- Switched from `python:3.12` to `python:3.12-slim`
+- Pinned the base image using a SHA digest for reproducible builds
+- Removed unnecessary runtime packages (`build-essential`, `gcc`, `curl`, `vim`)
+- Improved Docker layer caching by copying `requirements.txt` before application code
+- Added a non-root user (`appuser`)
+- Added `.dockerignore`
+- Reduced image size from approximately 439 MB to 49 MB
